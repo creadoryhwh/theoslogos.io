@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Theos Logos | Biblioteca de Estudios</title>
+<style>
+  :root{
+    --tinta:#3a2312;
+    --rojo-vino:#7a201c;
+    --dorado:#b8860b;
+    --borde-oro:#c9a96a;
+    --fondo-lectura: #fdfbf7;
+  }
+  
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html, body { overflow-x: hidden; width: 100%; scroll-behavior: smooth; }
+
+  body{
+    font-family:'Georgia', 'Times New Roman', serif; 
+    color:var(--tinta); 
+    line-height:1.8;
+    font-size: clamp(16px, 1.2vw + 8px, 20px); 
+    background-image: url('fondo-desierto.jpg'); 
+    background-color: #1a0f0a; 
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    position: relative; 
+    min-height: 100vh;
+  }
+
+  /* Capa oscura para el fondo */
+  body::before {
+    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.65); z-index: -1; pointer-events: none; 
+  }
+  
+  /* HEADER PROFESIONAL */
+  header{
+    background-color: #ffffff; padding: 0.8rem 2rem; 
+    display: flex; justify-content: flex-start; align-items: center; 
+    position: sticky; top: 0; z-index: 9999; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+    border-bottom: 3px solid var(--rojo-vino); 
+    min-height: 90px; gap: 20px; 
+  }
+  .logo-theos-img { height: clamp(45px, 4vw, 65px); width: auto; object-fit: contain; }
+  .divisor-header { width: 2px; height: 50px; background-color: #ddd; border-radius: 2px; margin: 0 10px; }
+  .sello-jesus-img { height: clamp(55px, 5vw, 80px); width: auto; object-fit: contain; }
+
+  /* CONTENEDOR PRINCIPAL */
+  .main-container {
+    width: 96%;
+    max-width: 1000px;
+    margin: 3rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* TARJETAS DE LA BIBLIOTECA (PORTADA) */
+  .biblioteca-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .lectura-card {
+    background: var(--fondo-lectura);
+    border: 1px solid var(--borde-oro);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .lectura-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    border-color: var(--rojo-vino);
+  }
+
+  .lectura-card h2 {
+    color: var(--rojo-vino);
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .lectura-card p {
+    color: #555;
+    font-size: 1rem;
+    font-family: Arial, sans-serif;
+  }
+
+  /* VISOR DE LECTURA (OCULTO POR DEFECTO) */
+  #visor-lectura {
+    display: none;
+    background: var(--fondo-lectura);
+    border: 1px solid var(--borde-oro);
+    border-radius: 8px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.7);
+    padding: 3rem;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .btn-volver {
+    display: inline-block;
+    background: transparent;
+    color: var(--rojo-vino);
+    border: 2px solid var(--rojo-vino);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition: 0.3s;
+  }
+  .btn-volver:hover { background: var(--rojo-vino); color: #fff; }
+
+  .lectura-titulo {
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    color: #111;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+  }
+
+  /* BOTÓN DE AUDIO LECTURA */
+  .audio-controls { margin-bottom: 2rem; }
+  .btn-play {
+    display: flex; align-items: center; gap: 10px; background: var(--rojo-vino); color: #fff;
+    border: none; padding: 0.8rem 1.5rem; border-radius: 30px; font-family: Arial, sans-serif;
+    font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(122, 32, 28, 0.4);
+  }
+  .btn-play:hover { background: #5c1010; transform: translateY(-2px); }
+  .btn-play svg { width: 20px; height: 20px; fill: currentColor; }
+  .btn-play.detener { background: #333; }
+
+  .contenido-lectura p { margin-bottom: 1.5rem; text-align: justify; }
+  .contenido-lectura .cita-biblica { background: #f4f4f4; border-left: 3px solid var(--rojo-vino); padding: 1rem 1.5rem; margin: 1.5rem 0; font-style: italic; color: #333; border-radius: 0 4px 4px 0; }
+
+  /* FOOTER */
+  footer{
+    background: #fdfbf7; color: var(--tinta); padding: 2rem; text-align: center; 
+    border-top: 4px solid var(--rojo-vino); width: 100%; z-index: 1; margin-top: 4rem;
+  }
+  .logos-footer { display: flex; justify-content: center; align-items: center; gap: 2rem; margin-top: 1rem; flex-wrap: wrap; }
+  .logos-footer .logo-theos-img { height: 40px; }
+  .logos-footer .sello-jesus-img { height: 50px; }
+
+  @media(max-width: 768px){
+    header { justify-content: center; }
+    .divisor-header { display: none; }
+    .main-container { padding: 0 1rem; }
+    #visor-lectura { padding: 1.5rem; }
+    .contenido-lectura p { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logo-theos.png" alt="Theos Logos" class="logo-theos-img">
+  <div class="divisor-header"></div>
+  <img src="sello-jesus.png" alt="Sello de Jesús" class="sello-jesus-img">
+</header>
+
+<div class="main-container">
+
+  <!-- =========================================
+       PORTADA: LISTA DE LECTURAS
+       ========================================= -->
+  <div id="portada-biblioteca">
+    <h1 style="color: #fff; text-align: center; margin-bottom: 2rem; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); font-size: 2.5rem;">Biblioteca de Estudios</h1>
+    
+    <div class="biblioteca-grid">
+      
+      <!-- TARJETA 1 -->
+      <div class="lectura-card" onclick="abrirLectura('lectura-1')">
+        <h2>El temor y la incertidumbre</h2>
+        <p>Un estudio sobre la muerte, la esperanza y la promesa de la vida eterna en Cristo.</p>
+      </div>
+
+      <!-- TARJETA 2 (Ejemplo adicional, puedes duplicarla) -->
+      <div class="lectura-card" onclick="abrirLectura('lectura-2')">
+        <h2>El Misterio del 14</h2>
+        <p>Descubre el mensaje oculto en la genealogía de Mateo y la gematría hebrea.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================
+       VISOR DE LECTURA CON AUDIO (OCULTO)
+       ========================================= -->
+  <div id="visor-lectura">
+    <button class="btn-volver" onclick="cerrarLectura()">← Volver a la Biblioteca</button>
+    
+    <!-- LECTURA 1 -->
+    <div id="lectura-1" class="lectura-contenido-wrapper" style="display: none;">
+      <h1 class="lectura-titulo">El temor y la incertidumbre</h1>
+      
+      <!-- Botón de Audio-Lectura -->
+      <div class="audio-controls">
+        <button class="btn-play" onclick="toggleLectura('lectura-1-texto', this)">
+          <svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+          <span>Escuchar Artículo</span>
+        </button>
+      </div>
+
+      <!-- El texto de la lectura (ID único para el audio) -->
+      <div class="contenido-lectura" id="lectura-1-texto">
+        <p>La muerte es el mayor problema al que se enfrenta el ser humano. Podemos intentar relegar cualquier pensamiento sobre ella a los rincones más apartados de la mente, pero no podemos borrar por completo la conciencia de nuestra mortalidad. Sabemos que el espectro de la muerte nos aguarda.</p>
+        <p>El apóstol Pablo escribe:</p>
+        <div class="cita-biblica">
+          <p>Por tanto, tal como el pecado entró en el mundo por medio de un hombre, y por medio del pecado la muerte, así también la muerte se extendió a todos los hombres, porque todos pecaron. (Ro 5:12-14).</p>
+        </div>
+        <p>Vemos que el pecado existía incluso antes de que la ley fuera dada por medio de Moisés, como demuestra el hecho de que ya se producía la muerte. La muerte entró en el mundo como consecuencia directa del pecado.</p>
+        <p>El mundo secular considera la muerte parte del orden natural, mientras que el cristiano la entiende como parte del orden caído: no formaba parte de la condición original del ser humano. La muerte llegó como el juicio de Dios contra el pecado.</p>
+      </div>
+    </div>
+
+    <!-- LECTURA 2 -->
+    <div id="lectura-2" class="lectura-contenido-wrapper" style="display: none;">
+      <h1 class="lectura-titulo">El Misterio del 14</h1>
+      
+      <!-- Botón de Audio-Lectura -->
+      <div class="audio-controls">
+        <button class="btn-play" onclick="toggleLectura('lectura-2-texto', this)">
+          <svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+          <span>Escuchar Artículo</span>
+        </button>
+      </div>
+
+      <!-- El texto de la lectura (ID único para el audio) -->
+      <div class="contenido-lectura" id="lectura-2-texto">
+        <p>En el Evangelio de Mateo, la genealogía de Jesús está estructurada de una manera muy particular. El evangelista no solo nos da una lista de nombres, sino que los agrupa en tres bloques de catorce generaciones cada uno.</p>
+        <div class="cita-biblica">
+          <p>De modo que todas las generaciones desde Abraham hasta David son catorce generaciones; y desde David hasta la deportación a Babilonia, catorce generaciones; y desde la deportación a Babilonia hasta Cristo, catorce generaciones. (Mateo 1:17)</p>
+        </div>
+        <p>Esta repetición del número 14 no es un simple capricho literario. Detrás de ella se esconde un mensaje teológico profundo que los lectores judíos de Mateo podían captar de inmediato. El nombre de David en hebreo (D-V-D) suma 4 + 6 + 4 = 14. Mateo está gritando que Jesús es el Hijo de David.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 Theos Logos. Todos los derechos reservados.</p>
+  <div class="logos-footer">
+    <img src="logo-theos.png" alt="Theos Logos" class="logo-theos-img">
+    <img src="sello-jesus.png" alt="Sello de Jesús" class="sello-jesus-img">
+  </div>
+</footer>
+
+<script>
+  // 1. Lógica para abrir y cerrar lecturas
+  function abrirLectura(id) {
+    // Ocultar portada
+    document.getElementById('portada-biblioteca').style.display = 'none';
+    // Mostrar visor
+    document.getElementById('visor-lectura').style.display = 'block';
+    
+    // Ocultar todos los textos
+    const textos = document.querySelectorAll('.lectura-contenido-wrapper');
+    textos.forEach(t => t.style.display = 'none');
+    
+    // Mostrar el texto seleccionado
+    document.getElementById(id).style.display = 'block';
+    
+    // Detener cualquier audio que esté sonando
+    window.speechSynthesis.cancel();
+    resetearBotones();
+    
+    // Subir al inicio de la página
+    window.scrollTo(0, 0);
+  }
+
+  function cerrarLectura() {
+    // Mostrar portada
+    document.getElementById('portada-biblioteca').style.display = 'block';
+    // Ocultar visor
+    document.getElementById('visor-lectura').style.display = 'none';
+    // Detener audio
+    window.speechSynthesis.cancel();
+    resetearBotones();
+  }
+
+  // 2. Lógica de Audio-Lectura
+  function toggleLectura(idTexto, boton) {
+    if ('speechSynthesis' in window) {
+      // Si ya está leyendo, detener
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        resetearBotones();
+      } else {
+        // Obtener el texto y leerlo
+        const texto = document.getElementById(idTexto).innerText;
+        const mensaje = new SpeechSynthesisUtterance(texto);
+        mensaje.lang = 'es-ES'; // Español
+        mensaje.rate = 0.95; // Velocidad
+        
+        // Cambiar el botón a "Detener"
+        boton.classList.add('detener');
+        boton.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6,5H10V19H6V5M14,5H18V19H14V5Z" /></svg> <span>Detener Lectura</span>';
+
+        // Cuando termine, volver a la normalidad
+        mensaje.onend = function() {
+          resetearBotones();
+        };
+
+        window.speechSynthesis.speak(mensaje);
+      }
+    } else {
+      alert("Tu navegador no soporta la lectura de voz. Por favor usa Google Chrome, Edge o Safari.");
+    }
+  }
+
+  // Función para restaurar todos los botones
+  function resetearBotones() {
+    const botones = document.querySelectorAll('.btn-play');
+    botones.forEach(btn => {
+      btn.classList.remove('detener');
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg> <span>Escuchar Artículo</span>';
+    });
+  }
+</script>
+
+</body>
+</html>
